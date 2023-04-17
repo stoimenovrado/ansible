@@ -1,0 +1,43 @@
+- name: Update dnf cache
+  dnf:
+    update_cache: yes
+
+- name: Install mariadb
+  dnf:
+    name:
+      - mariadb
+      - mariadb-server
+      - python3
+      - python3-pip
+      - epel-release
+      - python3-PyMySQL
+    state: present
+
+- name: Install mariadb
+  dnf:
+    name:
+      - mariadb
+    state: present
+
+- name: Copy SQL file to remote host
+  copy:
+    src: /home/vagrant/plays/files/db/db_setup.sql
+    dest: /tmp/db_setup.sql
+
+- name: Start mariaDB
+  shell: "sudo systemctl start mariadb"
+
+- name: Enable MariaDB
+  shell: "sudo systemctl enable mariadb"
+
+- name: Mysql import
+  shell: "sudo mysql -u root < /tmp/db_setup.sql"
+
+- name: Add port to firewalld
+  firewalld:
+    port: 3306/tcp
+    permanent: yes
+    state: enabled
+
+- name: Restart firewall
+  shell: "sudo firewall-cmd --reload"

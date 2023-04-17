@@ -1,0 +1,5 @@
+- name: Provision the dbhost
+  hosts: dbserver
+  become: true
+  roles:
+    - db

@@ -1,0 +1,34 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install packages
+  apt:
+    name:
+      - curl
+      - tar
+      - php
+      - php-mysqlnd
+    state: present
+
+- name: Install apache
+  apt:
+    name:
+      - apache2
+    state: present
+
+- name: Start apache2
+  shell: "sudo systemctl start apache2"
+
+- name: Enable apache2
+  shell: "sudo systemctl enable apache2"
+
+- name: Copy files
+  copy:
+    src: /home/vagrant/plays/files/web/
+    dest: /var/www/html/
+
+- name: Remove files
+  file:
+    path: /var/www/html/index.html
+    state: absent

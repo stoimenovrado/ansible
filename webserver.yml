@@ -1,0 +1,5 @@
+- name: Provision the webhost
+  hosts: webserver
+  become: true
+  roles:
+    - web

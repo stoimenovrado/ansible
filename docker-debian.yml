@@ -1,0 +1,47 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install dependencies
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+      - python3
+      - python3-pip
+    state: present
+
+- name: Install Docker SDK for Python
+  pip:
+    name: docker
+
+- name: Add Docker's official GPG key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: Add Docker repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable
+    state: present
+
+- name: Install Docker
+  apt:
+    name: docker-ce
+    state: present
+
+- name: Pull Nginx image
+  docker_image:
+    name: nginx
+    state: present
+
+- name: Create Nginx container
+  docker_container:
+    name: ansible-nginx
+    image: nginx
+    ports:
+      - "80:80"
+    restart_policy: always
